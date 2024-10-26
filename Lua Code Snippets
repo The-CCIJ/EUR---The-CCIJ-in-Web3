@@ -1,0 +1,49 @@
+Sample Code Snippets in Lua
+1. Moving (Flying) Objects Toward the Player
+lua
+Copy code
+local player = game.Players.LocalPlayer
+local obstacles = {"SocialMediaPost", "Fireball", "MalfeasanceIcon"}
+
+-- Function to spawn obstacles
+function spawnObstacle(obstacleType)
+    local obstacle = Instance.new("Part")
+    obstacle.Name = obstacleType
+    obstacle.Position = Vector3.new(math.random(-50, 50), 10, math.random(-50, 50))
+    obstacle.Velocity = (player.Character.HumanoidRootPart.Position - obstacle.Position).unit * 10
+    obstacle.Parent = workspace
+end
+
+-- Timer to continuously spawn obstacles
+while true do
+    wait(3) -- Adjust frequency as needed
+    local randomObstacle = obstacles[math.random(1, #obstacles)]
+    spawnObstacle(randomObstacle)
+end
+2. Shielding Mechanism
+lua
+Copy code
+local shieldObjects = {"BluePlasticChair", "VotingPoll", "CastingContainer", "ContainerLid"}
+
+function shieldPlayer(objectName)
+    if table.find(shieldObjects, objectName) then
+        -- Apply shield effect or give points
+        player.leaderstats.Points.Value = player.leaderstats.Points.Value + 10
+        print("Shield activated! Points awarded.")
+    else
+        print("No shield effect.")
+    end
+end
+3. Reward Mechanism in Calm Zone
+lua
+Copy code
+local calmZone = workspace:FindFirstChild("CalmZone")
+local rewardGiven = false
+
+calmZone.Touched:Connect(function(hit)
+    if hit.Parent:FindFirstChild("Humanoid") and not rewardGiven then
+        rewardGiven = true
+        print("Congratulations! You've completed the mission.")
+        -- Reward player (e.g., badge or virtual item)
+    end
+end)
