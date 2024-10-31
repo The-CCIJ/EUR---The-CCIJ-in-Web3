@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
+contract VezaToken is ERC1155, Ownable {
+    // Token IDs
+    enum TokenType { REPORT_CONTRIBUTION, MODERATOR_BADGE }
+
+    constructor() ERC1155("https://api.example.com/metadata/{id}.json") {
+        // Mint initial tokens
+        _mint(msg.sender, uint256(TokenType.REPORT_CONTRIBUTION), 1000, "");
+        _mint(msg.sender, uint256(TokenType.MODERATOR_BADGE), 500, "");
+    }
+
+    function rewardContributor(address contributor, uint256 id, uint256 amount) external onlyOwner {
+        _mint(contributor, id, amount, "");
+    }
+
+    function uri(uint256 tokenId) public view override returns (string memory) {
+        return string(abi.encodePacked("https://api.example.com/metadata/", Strings.toString(tokenId), ".json"));
+    }
+}
