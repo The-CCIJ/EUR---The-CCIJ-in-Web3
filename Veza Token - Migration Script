@@ -1,0 +1,5 @@
+const VezaToken = artifacts.require("VezaToken");
+
+module.exports = function (deployer) {
+  deployer.deploy(VezaToken);
+};
